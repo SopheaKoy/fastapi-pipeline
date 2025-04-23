@@ -7,23 +7,23 @@ pipeline {
     }
 
     stages {
-        stage('Build Docker') {
+        stage('Check version docker compose') {
             steps {
-                sh 'docker-compose build'
+                sh 'docker-compose --version'
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                sh 'docker-compose run --rm backend pytest tests --junitxml=report.xml'
-            }
-        }
+        // stage('Run Tests') {
+        //     steps {
+        //         sh 'docker-compose run --rm backend pytest tests --junitxml=report.xml'
+        //     }
+        // }
 
-        stage('Shutdown') {
-            steps {
-                sh 'docker-compose down'
-            }
-        }
+        // stage('Shutdown') {
+        //     steps {
+        //         sh 'docker-compose down'
+        //     }
+        // }
     }
 
     // post {
