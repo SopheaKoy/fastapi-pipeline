@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        TELEGRAM_BOT_TOKEN = credentials('telegram-bot-token')
-        TELEGRAM_CHAT_ID = '-1001234567890' // Replace with your chat ID
+        TELEGRAM_BOT_TOKEN = credentials('7773964856:AAF5igwKgWTd1xRPAroZ4RgS4SpKan5OQzw')
+        TELEGRAM_CHAT_ID = '6465385844' // Replace with your chat ID
     }
 
     stages {
