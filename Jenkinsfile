@@ -28,7 +28,7 @@ pipeline {
 
     post {
         success {
-            node {
+            node('') {  // Using empty string label to use any available node
                 script {
                     sh '''
                     curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
@@ -40,7 +40,7 @@ pipeline {
             }
         }
         failure {
-            node {
+            node('') {  // Using empty string label to use any available node
                 script {
                     sh '''
                     curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
