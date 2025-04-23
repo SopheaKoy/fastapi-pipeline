@@ -26,28 +26,60 @@ pipeline {
         }
     }
 
+    // post {
+    //     success {
+    //         node('') {
+    //             script {
+    //                 sh """
+    //                 curl -s -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
+    //                     -d chat_id=${env.TELEGRAM_CHAT_ID} \
+    //                     -d text="✅ Build *SUCCESS* on job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})" \
+    //                     -d parse_mode=Markdown
+    //                 """
+    //             }
+    //         }
+    //     }
+    //     failure {
+    //         node('') {
+    //             script {
+    //                 sh """
+    //                 curl -s -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
+    //                     -d chat_id=${env.TELEGRAM_CHAT_ID} \
+    //                     -d text="❌ Build *FAILED* on job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})" \
+    //                     -d parse_mode=Markdown
+    //                 """
+    //             }
+    //         }
+    //     }
+    // }
     post {
         success {
-            node('') {
-                script {
-                    sh """
-                    curl -s -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
-                        -d chat_id=${env.TELEGRAM_CHAT_ID} \
-                        -d text="✅ Build *SUCCESS* on job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})" \
+            script {
+                withCredentials([
+                    string(credentialsId: 'telegram-bot-token', variable: 'BOT_TOKEN'),
+                    string(credentialsId: 'telegram-chat-id', variable: 'CHAT_ID')
+                ]) {
+                    sh '''#!/bin/bash
+                    curl -s -X POST https://api.telegram.org/bot${BOT_TOKEN}/sendMessage \
+                        -d chat_id=${CHAT_ID} \
+                        -d text="✅ Build *SUCCESS* on job: ${JOB_NAME} (#${BUILD_NUMBER})" \
                         -d parse_mode=Markdown
-                    """
+                    '''
                 }
             }
         }
         failure {
-            node('') {
-                script {
-                    sh """
-                    curl -s -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
-                        -d chat_id=${env.TELEGRAM_CHAT_ID} \
-                        -d text="❌ Build *FAILED* on job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})" \
+            script {
+                withCredentials([
+                    string(credentialsId: 'telegram-bot-token', variable: 'BOT_TOKEN'),
+                    string(credentialsId: 'telegram-chat-id', variable: 'CHAT_ID')
+                ]) {
+                    sh '''#!/bin/bash
+                    curl -s -X POST https://api.telegram.org/bot${BOT_TOKEN}/sendMessage \
+                        -d chat_id=${CHAT_ID} \
+                        -d text="❌ Build *FAILED* on job: ${JOB_NAME} (#${BUILD_NUMBER})" \
                         -d parse_mode=Markdown
-                    """
+                    '''
                 }
             }
         }
