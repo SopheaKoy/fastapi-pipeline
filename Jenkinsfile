@@ -27,29 +27,29 @@ pipeline {
     }
 
     post {
-        success {
-            node('') {  // Using empty string label to use any available node
-                script {
-                    sh '''
-                    curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
-                        -d chat_id=$TELEGRAM_CHAT_ID \
-                        -d text="✅ Build *SUCCESS* on job: $JOB_NAME (#$BUILD_NUMBER)" \
-                        -d parse_mode=Markdown
-                    '''
-                }
-            }
-        }
-        failure {
-            node('') {  // Using empty string label to use any available node
-                script {
-                    sh '''
-                    curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
-                        -d chat_id=$TELEGRAM_CHAT_ID \
-                        -d text="❌ Build *FAILED* on job: $JOB_NAME (#$BUILD_NUMBER)" \
-                        -d parse_mode=Markdown
-                    '''
-                }
+    success {
+        node('') {
+            script {
+                sh """
+                curl -s -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
+                    -d chat_id=${env.TELEGRAM_CHAT_ID} \
+                    -d text="✅ Build *SUCCESS* on job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})" \
+                    -d parse_mode=Markdown
+                """
             }
         }
     }
+    failure {
+        node('') {
+            script {
+                sh """
+                curl -s -X POST https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage \
+                    -d chat_id=${env.TELEGRAM_CHAT_ID} \
+                    -d text="❌ Build *FAILED* on job: ${env.JOB_NAME} (#${env.BUILD_NUMBER})" \
+                    -d parse_mode=Markdown
+                """
+            }
+        }
+    }
+}
 }
