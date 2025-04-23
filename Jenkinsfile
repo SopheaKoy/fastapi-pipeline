@@ -2,39 +2,24 @@ pipeline {
     agent any
 
     environment {
-        COMPOSE_FILE = 'docker-compose.yml'
+        TELEGRAM_BOT_TOKEN = credentials('telegram-bot-token')
+        TELEGRAM_CHAT_ID = '-1001234567890' // Replace with your chat ID
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Build & Start Services') {
+        stage('Build Docker') {
             steps {
                 sh 'docker-compose build'
-                sh 'docker-compose up -d'
-                // Optional: wait for FastAPI to be up (basic healthcheck)
-                sh 'sleep 5'
             }
         }
 
         stage('Run Tests') {
             steps {
-                // Run tests inside the backend container
-                sh 'docker-compose exec backend pytest tests --junitxml=report.xml'
+                sh 'docker-compose run --rm backend pytest tests --junitxml=report.xml'
             }
         }
 
-        stage('Archive Test Results') {
-            steps {
-                junit 'report.xml'
-            }
-        }
-
-        stage('Shutdown Services') {
+        stage('Shutdown') {
             steps {
                 sh 'docker-compose down'
             }
@@ -42,11 +27,21 @@ pipeline {
     }
 
     post {
-        always {
-            echo '🔁 Pipeline complete!'
+        success {
+            sh '''
+            curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \\
+                -d chat_id=$TELEGRAM_CHAT_ID \\
+                -d text=\"✅ Build *SUCCESS* on job: $JOB_NAME (#$BUILD_NUMBER)\" \\
+                -d parse_mode=Markdown
+            '''
         }
         failure {
-            echo '❌ Something went wrong.'
+            sh '''
+            curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \\
+                -d chat_id=$TELEGRAM_CHAT_ID \\
+                -d text=\"❌ Build *FAILED* on job: $JOB_NAME (#$BUILD_NUMBER)\" \\
+                -d parse_mode=Markdown
+            '''
         }
     }
 }
