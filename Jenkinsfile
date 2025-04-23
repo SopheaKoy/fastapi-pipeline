@@ -30,17 +30,17 @@ pipeline {
         success {
             script {
                 withCredentials([
-                    string(credentialsId: 'telegram-bot-token', variable: 'BOT_TOKEN'),
-                    string(credentialsId: 'telegram-chat-id', variable: 'CHAT_ID')
+                    string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TELEGRAM_BOT_TOKEN'),
+                    string(credentialsId: 'TELEGRAM_CHAT_ID', variable: 'CHAT_ID')
                 ]) {
                     def date = new Date().format("yyyy-MM-dd HH:mm:ss 'UTC'", TimeZone.getTimeZone('UTC'))
                     def message = """
-\u2705 *cdc_admin*, *prod*, *Phors Phearom*, ${date}
+\u2705 *fastapi*, *dev*, *Ding Dann*, ${date}
 -----------------------------
 *Pipeline Overview*
 *ID*          : 9105
-*ENVIRONMENT* : prod
-*APPLICATION* : cdc_admin
+*ENVIRONMENT* : dev
+*APPLICATION* : fastapi
 *DATE*        : ${date}
 *DURATION*    : 2m 37s
 *STATUS*      : \u2705 success
@@ -55,11 +55,11 @@ pipeline {
 *VIEW PIPELINE* : [Link](http://jenkins/pipeline/9105)
 *IP*            : 10.255.1.203
 *VIEW PROJECT*  : http://10.255.1.208/ipm-admin/cdc_admin
-*SERVICE URL*   : https://admin.cdcdigital.net
+*SERVICE URL*   : Null
 """
                     sh """
-                    curl -s -X POST https://api.telegram.org/bot${BOT_TOKEN}/sendMessage \
-                        -d chat_id=${CHAT_ID} \
+                    curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
+                        -d chat_id=${TELEGRAM_CHAT_ID} \
                         -d parse_mode=Markdown \
                         --data-urlencode text='${message}'
                     """
@@ -69,27 +69,27 @@ pipeline {
         failure {
             script {
                 withCredentials([
-                    string(credentialsId: 'telegram-bot-token', variable: 'BOT_TOKEN'),
-                    string(credentialsId: 'telegram-chat-id', variable: 'CHAT_ID')
+                    string(credentialsId: 'TELEGRAM_BOT_TOKEN', variable: 'TELEGRAM_BOT_TOKEN'),
+                    string(credentialsId: 'TELEGRAM_CHAT_ID', variable: 'TELEGRAM_CHAT_ID')
                 ]) {
                     def date = new Date().format("yyyy-MM-dd HH:mm:ss 'UTC'", TimeZone.getTimeZone('UTC'))
                     def message = """
-\u274C *cdc_admin*, *prod*, *Phors Phearom*, ${date}
+\u274C *fastapi*, *dev*, *Ding Dann*, ${date}
 -----------------------------
 *Pipeline Overview*
 *ID*          : 9105
-*ENVIRONMENT* : prod
+*ENVIRONMENT* : dev
 *APPLICATION* : cdc_admin
 *DATE*        : ${date}
 *STATUS*      : \u274C failed
 -----------------------------
 *Quick Links*
 *VIEW PIPELINE* : [Link](http://jenkins/pipeline/9105)
-*SERVICE URL*   : https://admin.cdcdigital.net
+*SERVICE URL*   : Null
 """
                     sh """
-                    curl -s -X POST https://api.telegram.org/bot${BOT_TOKEN}/sendMessage \
-                        -d chat_id=${CHAT_ID} \
+                    curl -s -X POST https://api.telegram.org/bot${TELEGRAM_CHAT_ID}/sendMessage \
+                        -d chat_id=${TELEGRAM_CHAT_ID} \
                         -d parse_mode=Markdown \
                         --data-urlencode text='${message}'
                     """
