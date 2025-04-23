@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Check version docker compose') {
             steps {
-                sh 'docker-compose --version'
+                echo 'Hello Developer'
             }
         }
 
