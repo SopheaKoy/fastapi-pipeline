@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        stage('Build Docker') 
+        stage('Build Docker') {
             steps {
                 echo "Pipeline Name: ${env.JOB_NAME}"
                 echo "Build Number: ${env.TELEGRAM_CHAT_ID}"
