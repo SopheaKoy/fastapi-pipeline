@@ -9,9 +9,6 @@ pipeline {
     stages {
         stage('Build Docker') {
             steps {
-                echo "Pipeline Name: ${env.JOB_NAME}"
-                echo "Build Number: ${env.TELEGRAM_CHAT_ID}"
-                echo "My Env Var: ${env.TELEGRAM_BOT_TOKEN}"
                 sh 'docker-compose build'
             }
         }
