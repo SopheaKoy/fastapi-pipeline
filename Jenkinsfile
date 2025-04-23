@@ -28,20 +28,24 @@ pipeline {
 
     post {
         success {
-            sh '''
-            curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \\
-                -d chat_id=$TELEGRAM_CHAT_ID \\
-                -d text=\"✅ Build *SUCCESS* on job: $JOB_NAME (#$BUILD_NUMBER)\" \\
-                -d parse_mode=Markdown
-            '''
+            script {
+                sh '''
+                curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
+                    -d chat_id=$TELEGRAM_CHAT_ID \
+                    -d text="✅ Build *SUCCESS* on job: $JOB_NAME (#$BUILD_NUMBER)" \
+                    -d parse_mode=Markdown
+                '''
+            }
         }
         failure {
-            sh '''
-            curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \\
-                -d chat_id=$TELEGRAM_CHAT_ID \\
-                -d text=\"❌ Build *FAILED* on job: $JOB_NAME (#$BUILD_NUMBER)\" \\
-                -d parse_mode=Markdown
-            '''
+            script {
+                sh '''
+                curl -s -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage \
+                    -d chat_id=$TELEGRAM_CHAT_ID \
+                    -d text="❌ Build *FAILED* on job: $JOB_NAME (#$BUILD_NUMBER)" \
+                    -d parse_mode=Markdown
+                '''
+            }
         }
     }
 }
