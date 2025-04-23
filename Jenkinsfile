@@ -3,11 +3,11 @@ pipeline {
 
     environment {
         TELEGRAM_BOT_TOKEN = credentials('')
-        TELEGRAM_CHAT_ID = '6465385844'
+        TELEGRAM_CHAT_ID = 'user chat id'
     }
 
     stages {
-        stage('Build Docker') {
+        stage('Build Docker') 
             steps {
                 sh 'docker-compose build'
             }
